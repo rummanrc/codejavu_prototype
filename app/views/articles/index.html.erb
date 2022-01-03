@@ -1,0 +1,12 @@
+<h1>Aritcle list</h1>
+<p>Find me in app/views/articles/index.html.erb</p>
+
+<ul>
+  <% @articles.each do |article| %>
+    <li>
+      <a href="/articles/<%= article.id %>">
+        <%= article.title %>
+      </a>
+    </li>
+  <% end %>
+</ul>
