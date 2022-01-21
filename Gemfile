@@ -7,6 +7,7 @@ ruby "2.7.0"
 gem 'bcrypt', '~> 3.1.7'
 gem 'rack-cors'
 gem 'jwt'
+gem "dotenv-rails", groups: [:development, :test]
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.0"
