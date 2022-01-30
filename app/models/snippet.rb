@@ -1,2 +1,0 @@
-class Snippet < ApplicationRecord
-end

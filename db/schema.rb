@@ -10,26 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_30_060300) do
+ActiveRecord::Schema.define(version: 2022_01_16_121013) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "languages", force: :cascade do |t|
-    t.string "name", limit: 32
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "snippets", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "language_id"
-    t.text "snippet"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["language_id"], name: "index_snippets_on_language_id"
-    t.index ["user_id"], name: "index_snippets_on_user_id"
-  end
 
   create_table "users", force: :cascade do |t|
     t.string "email"
@@ -38,6 +22,4 @@ ActiveRecord::Schema.define(version: 2022_01_30_060300) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  add_foreign_key "snippets", "languages"
-  add_foreign_key "snippets", "users"
 end
