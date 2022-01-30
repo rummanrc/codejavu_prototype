@@ -25,6 +25,6 @@ class SnippetsController < ApplicationController
   private
 
   def snippet_params
-    params.require(:data).permit(:language_id, :title, :snippet)
+    params.permit(:language_id, :title, :snippet)
   end
 end
