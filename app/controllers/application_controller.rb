@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::API
   def current_user_id
     begin
-      token = request.headers["Authorization"]
+      token = request.headers["Authorization"].split.last
       decoded_array = JWT.decode(token, hmac_secret, true, { algorithm: 'HS256' })
       payload = decoded_array.first
     rescue #JWT::DecodeError
@@ -21,9 +21,7 @@ class ApplicationController < ActionController::API
   end
 
   def hmac_secret
-    #todo: env no accessible probably
-    #ENV["API_SECRET_KEY"]
-    "123secret"
+    ENV["API_SECRET_KEY"]
   end
 
   def client_has_valid_token?

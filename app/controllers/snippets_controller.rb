@@ -1,6 +1,5 @@
 class SnippetsController < ApplicationController
-  # todo: skipping auth for now
-  # before_action :require_login
+  before_action :require_login
 
   def index
     render json: Snippet.where(:user_id => current_user_id)
@@ -8,7 +7,7 @@ class SnippetsController < ApplicationController
 
   def create
     snippet = Snippet.new(snippet_params)
-    #snippet.user_id = current_user_id
+    snippet.user_id = current_user_id
     snippet.save
     render json: snippet
   end
@@ -26,7 +25,6 @@ class SnippetsController < ApplicationController
   private
 
   def snippet_params
-    #todo: remove user_id after auth is fixed
-    params.permit(:user_id, :language_id, :title, :snippet)
+    params.permit(:language_id, :title, :snippet)
   end
 end
