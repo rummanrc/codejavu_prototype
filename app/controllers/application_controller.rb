@@ -4,7 +4,7 @@ class ApplicationController < ActionController::API
       token = request.headers["Authorization"]
       decoded_array = JWT.decode(token, hmac_secret, true, { algorithm: 'HS256' })
       payload = decoded_array.first
-    rescue #JWT::VerificationError
+    rescue #JWT::DecodeError
       return nil
     end
     payload["user_id"]
@@ -21,7 +21,9 @@ class ApplicationController < ActionController::API
   end
 
   def hmac_secret
-    ENV["API_SECRET_KEY"]
+    #todo: env no accessible probably
+    #ENV["API_SECRET_KEY"]
+    "123secret"
   end
 
   def client_has_valid_token?
