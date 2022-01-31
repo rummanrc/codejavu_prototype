@@ -21,9 +21,7 @@ class ApplicationController < ActionController::API
   end
 
   def hmac_secret
-    #todo: env no accessible probably
-    #ENV["API_SECRET_KEY"]
-    "123secret"
+    ENV["API_SECRET_KEY"]
   end
 
   def client_has_valid_token?
