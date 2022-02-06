@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 2022_01_30_060300) do
   create_table "snippets", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "language_id"
+    t.string "title"
     t.text "snippet"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
