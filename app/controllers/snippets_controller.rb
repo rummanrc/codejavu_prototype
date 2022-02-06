@@ -7,6 +7,13 @@ class SnippetsController < ApplicationController
 
   def create
     snippet = Snippet.new(snippet_params)
+
+    if snippet.invalid?
+      return render :json => {
+        :errors => snippet.errors.full_messages
+      }, :status => :unprocessable_entity
+    end
+
     snippet.user_id = current_user_id
     snippet.save
     render json: snippet
@@ -25,6 +32,6 @@ class SnippetsController < ApplicationController
   private
 
   def snippet_params
-    params.permit(:language_id, :title, :snippet)
+    params.permit(:id, :language_id, :title, :snippet)
   end
 end
