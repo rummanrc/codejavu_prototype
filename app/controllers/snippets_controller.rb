@@ -5,6 +5,12 @@ class SnippetsController < ApplicationController
     render json: Snippet.where(:user_id => current_user_id)
   end
 
+  def show
+    snippet_id = params.permit(:id)['id']
+    snippet = Snippet.includes(:language, :url).where(:user_id => current_user_id, :id => snippet_id).first
+    render json: snippet
+  end
+
   def create
     snippet = Snippet.new(snippet_params)
 
