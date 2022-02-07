@@ -2,11 +2,18 @@ class SnippetsController < ApplicationController
   before_action :require_login
 
   def index
-    render json: Snippet.where(:user_id => current_user_id)
+    render json: prepare_response_data(snippet).where(:user_id => current_user_id)
+  end
+
+  def show
+    snippet_id = params.permit(:id)['id']
+    snippet = Snippet.includes(:language, :url).where(:user_id => current_user_id, :id => snippet_id).first
+    render json: prepare_response_data(snippet)
   end
 
   def create
     snippet = Snippet.new(snippet_params)
+    snippet.user_id = current_user_id
 
     if snippet.invalid?
       return render :json => {
@@ -14,15 +21,17 @@ class SnippetsController < ApplicationController
       }, :status => :unprocessable_entity
     end
 
-    snippet.user_id = current_user_id
     snippet.save
-    render json: snippet
+
+    params[:urls].each {|item| Url.new(snippet_id: snippet.id,url: item).save}
+
+    render json: prepare_response_data(snippet)
   end
 
   def update
     snippet = Snippet.find(params[:id])
     snippet.update(snippet_params)
-    render json: snippet
+    render json: prepare_response_data(snippet)
   end
 
   def destroy
@@ -31,7 +40,12 @@ class SnippetsController < ApplicationController
 
   private
 
+  def prepare_response_data(snippet)
+    url_list = snippet.url.map(&:url)
+    { id: snippet.id, title: snippet.title, snippet: snippet.snippet, language: snippet.language.name, :urls => url_list }
+  end
+
   def snippet_params
-    params.permit(:id, :language_id, :title, :snippet)
+    params.permit(:id, :language_id, :title, :snippet, :urls)
   end
 end

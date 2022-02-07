@@ -30,3 +30,4 @@
 /vendor
 .idea
 /config/database.yml
+.byebug_history
