@@ -22,6 +22,9 @@ class SnippetsController < ApplicationController
     end
 
     snippet.save
+
+    params[:urls].each {|item| Url.new(snippet_id: snippet.id,url: item).save}
+
     render json: prepare_response_data(snippet)
   end
 
@@ -38,10 +41,11 @@ class SnippetsController < ApplicationController
   private
 
   def prepare_response_data(snippet)
-    { id: snippet.id, title: snippet.title, snippet: snippet.snippet, language: snippet.language.name}
+    url_list = snippet.url.map(&:url)
+    { id: snippet.id, title: snippet.title, snippet: snippet.snippet, language: snippet.language.name, :urls => url_list }
   end
 
   def snippet_params
-    params.permit(:id, :language_id, :title, :snippet)
+    params.permit(:id, :language_id, :title, :snippet, :urls)
   end
 end
