@@ -2,13 +2,13 @@ class SnippetsController < ApplicationController
   before_action :require_login
 
   def index
-    render json: render_snippet(snippet).where(:user_id => current_user_id)
+    render json: prepare_response_data(snippet).where(:user_id => current_user_id)
   end
 
   def show
     snippet_id = params.permit(:id)['id']
     snippet = Snippet.includes(:language, :url).where(:user_id => current_user_id, :id => snippet_id).first
-    render json: render_snippet(snippet)
+    render json: prepare_response_data(snippet)
   end
 
   def create
@@ -22,13 +22,13 @@ class SnippetsController < ApplicationController
     end
 
     snippet.save
-    render json: render_snippet(snippet)
+    render json: prepare_response_data(snippet)
   end
 
   def update
     snippet = Snippet.find(params[:id])
     snippet.update(snippet_params)
-    render json: render_snippet(snippet)
+    render json: prepare_response_data(snippet)
   end
 
   def destroy
@@ -37,7 +37,7 @@ class SnippetsController < ApplicationController
 
   private
 
-  def render_snippet(snippet)
+  def prepare_response_data(snippet)
     { id: snippet.id, title: snippet.title, snippet: snippet.snippet, language: snippet.language.name}
   end
 
