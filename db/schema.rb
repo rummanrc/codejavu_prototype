@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_06_060935) do
+ActiveRecord::Schema.define(version: 2022_02_11_075316) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,21 @@ ActiveRecord::Schema.define(version: 2022_02_06_060935) do
     t.index ["user_id"], name: "index_snippets_on_user_id"
   end
 
+  create_table "tag_assigns", force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.bigint "snippet_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["snippet_id"], name: "index_tag_assigns_on_snippet_id"
+    t.index ["tag_id"], name: "index_tag_assigns_on_tag_id"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "urls", force: :cascade do |t|
     t.bigint "snippet_id"
     t.text "url"
@@ -49,5 +64,7 @@ ActiveRecord::Schema.define(version: 2022_02_06_060935) do
 
   add_foreign_key "snippets", "languages"
   add_foreign_key "snippets", "users"
+  add_foreign_key "tag_assigns", "snippets"
+  add_foreign_key "tag_assigns", "tags"
   add_foreign_key "urls", "snippets"
 end
