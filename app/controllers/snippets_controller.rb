@@ -24,7 +24,7 @@ class SnippetsController < ApplicationController
     snippet.save
 
     params[:urls].each {|item| Url.new(snippet_id: snippet.id,url: item).save}
-    params[:tag_ids].each {|item| TagAssign.new(snippet_id: snippet.id, tag_id: item).save}
+    params[:tags].each {|item| TagAssign.new(snippet_id: snippet.id, tag_id: item).save}
 
     render json: prepare_response_data(snippet)
   end
@@ -48,6 +48,6 @@ class SnippetsController < ApplicationController
   end
 
   def snippet_params
-    params.permit(:id, :language_id, :title, :snippet, :urls, :tag_ids)
+    params.permit(:id, :language_id, :title, :snippet, :urls, :tags)
   end
 end
