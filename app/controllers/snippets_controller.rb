@@ -7,7 +7,7 @@ class SnippetsController < ApplicationController
 
   def show
     snippet_id = params.permit(:id)['id']
-    snippet = Snippet.includes(:language, :url).where(:user_id => current_user_id, :id => snippet_id).first
+    snippet = Snippet.where(:user_id => current_user_id, :id => snippet_id).first
     render json: prepare_response_data(snippet)
   end
 
@@ -24,6 +24,7 @@ class SnippetsController < ApplicationController
     snippet.save
 
     params[:urls].each {|item| Url.new(snippet_id: snippet.id,url: item).save}
+    params[:tag_ids].each {|item| TagAssign.new(snippet_id: snippet.id, tag_id: item).save}
 
     render json: prepare_response_data(snippet)
   end
@@ -41,11 +42,12 @@ class SnippetsController < ApplicationController
   private
 
   def prepare_response_data(snippet)
-    url_list = snippet.url.map(&:url)
-    { id: snippet.id, title: snippet.title, snippet: snippet.snippet, language: snippet.language.name, :urls => url_list }
+    url_list = snippet.urls.map{|item| item.url}
+    tag_list = snippet.tags.map{|tag| {'id' => tag.id, 'name' => tag.name}}
+    { id: snippet.id, title: snippet.title, snippet: snippet.snippet, language: snippet.language.name, :urls => url_list, :tags => tag_list}
   end
 
   def snippet_params
-    params.permit(:id, :language_id, :title, :snippet, :urls)
+    params.permit(:id, :language_id, :title, :snippet, :urls, :tag_ids)
   end
 end
