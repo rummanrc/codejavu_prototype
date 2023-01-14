@@ -5,5 +5,6 @@ Rails.application.routes.draw do
   get "/snippets/:id", to: "snippets#show"
   post "/login", to: "users#login"
   post "/authenticate", to: "users#authenticate"
-  get "/tag_list", to: "tags#index"
+  get "/tags", to: "tags#index"
+  get "/languages", to: "languages#index"
 end
