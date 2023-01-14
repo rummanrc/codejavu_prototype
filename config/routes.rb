@@ -6,4 +6,5 @@ Rails.application.routes.draw do
   post "/login", to: "users#login"
   post "/authenticate", to: "users#authenticate"
   get "/tag_list", to: "tags#index"
+  get "/languages", to: "languages#index"
 end
