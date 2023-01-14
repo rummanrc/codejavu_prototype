@@ -2,7 +2,7 @@ class SnippetsController < ApplicationController
   before_action :require_login
 
   def index
-    snippet_list = Snippet.includes(:language, :urls).where(:user_id => current_user_id)
+    snippet_list = Snippet.includes(:language).where(:user_id => current_user_id)
     render json: snippet_list.map{|snippet| prepare_response_data(snippet)}
   end
 
@@ -45,7 +45,7 @@ class SnippetsController < ApplicationController
   def prepare_response_data(snippet)
     url_list = snippet.urls.map{|item| item.url}
     tag_list = snippet.tags.map{|tag| {'id' => tag.id, 'name' => tag.name}}
-    { id: snippet.id, title: snippet.title, snippet: snippet.snippet, language: snippet.language.name, :urls => url_list, :tags => tag_list}
+    { id: snippet.id, title: snippet.title, language: snippet.language.name, :tags => tag_list}
   end
 
   def snippet_params
