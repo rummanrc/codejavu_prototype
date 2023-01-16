@@ -3,7 +3,7 @@ class SnippetsController < ApplicationController
 
   def index
     snippet_list = Snippet.includes(:language).where(:user_id => current_user_id)
-    render json: snippet_list.map{|snippet| prepare_response_data(snippet)}
+    render json: snippet_list.map{|snippet| prepare_response_data(snippet, true)}
   end
 
   def show
@@ -42,10 +42,18 @@ class SnippetsController < ApplicationController
 
   private
 
-  def prepare_response_data(snippet)
+  def prepare_response_data(snippet, is_index = false)
     url_list = snippet.urls.map{|item| item.url}
     tag_list = snippet.tags.map{|tag| {'id' => tag.id, 'name' => tag.name}}
-    { id: snippet.id, title: snippet.title, language: snippet.language.name, :tags => tag_list}
+    snippet_object = { id: snippet.id, title: snippet.title,
+    language: snippet.language.name, :tags => tag_list}
+
+    if is_index == false
+      snippet_object[:snippet] = snippet.snippet
+      snippet_object[:urls] = url_list
+    end
+    
+    return snippet_object
   end
 
   def snippet_params
