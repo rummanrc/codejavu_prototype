@@ -35,7 +35,6 @@ class SnippetsController < ApplicationController
     existing_snippet.urls.destroy_all
     existing_snippet.update(snippet_params)
 
-    #snippet_params.urls.each {|item| Url.new(snippet_id: snippet.id, url: item).save}
     render json: prepare_response_data(existing_snippet)
   end
 
@@ -52,6 +51,6 @@ class SnippetsController < ApplicationController
   end
 
   def snippet_params
-    params.require(:snippet).permit(:id, :language_id, :title, :snippet, :tags, :urls)
+    params.permit(:id, :language_id, :title, :snippet, :tags, :urls)
   end
 end
