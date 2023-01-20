@@ -24,17 +24,14 @@ class SnippetsController < ApplicationController
 
     snippet.save
 
-    params[:urls].each {|item| Url.new(snippet_id: snippet.id,url: item).save}
-    params[:tags].each {|item| TagAssign.new(snippet_id: snippet.id, tag_id: item).save}
-
     render json: prepare_response_data(snippet)
   end
 
   def update
     existing_snippet = Snippet.includes(:urls, :tags).find(params[:id])
-    existing_snippet.urls.destroy_all
+    #existing_snippet.urls.destroy_all
     existing_snippet.update(snippet_params)
-
+    
     render json: prepare_response_data(existing_snippet)
   end
 
@@ -45,8 +42,8 @@ class SnippetsController < ApplicationController
   private
 
   def prepare_response_data(snippet, is_index = false)
-    url_list = snippet.urls.map{|item| item.url}
-    tag_list = snippet.tags.map{|tag| {'id' => tag.id, 'name' => tag.name}}
+    url_list = snippet.urls.map{|item| {'id' => item.id, 'url' => item.url}}
+    tag_list = snippet.tags.map{|tag| {'id' => tag.id, 'tag_assigns_id' => tag.tag_assigns.where(snippet_id: snippet.id).pluck(:id).first, 'name' => tag.name}}
     snippet_object = { id: snippet.id, title: snippet.title,
     language: snippet.language.name, :tags => tag_list}
 
@@ -56,9 +53,9 @@ class SnippetsController < ApplicationController
     end
     
     return snippet_object
-  end
+ end
 
   def snippet_params
-    params.permit(:id, :language_id, :title, :snippet, :tags, :urls)
+    params.permit(:id, :language_id, :title, :snippet, :tag_assigns_attributes  => [:id, :tag_id, :_destroy], :urls_attributes => [:id, :url, :_destroy])
   end
 end
